@@ -7,6 +7,16 @@ pipeline {
                 git 'https://github.com/your-repo/mern-app.git'
             }
         }
+        stage('Run TruffleHog Secret Scan') {
+            steps {
+                script {
+                    // Run TruffleHog inside Docker to scan the repository for secrets
+                    sh '''
+                    docker run --rm -v $(pwd):/repo trufflesecurity/trufflehog --entropy=False /repo
+                    '''
+                }
+            }
+        }
         stage('Build') {
             steps {
                 script {
